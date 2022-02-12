@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -38,7 +38,7 @@ namespace App_Banque
             string requete;
             string log = textBox1.Text;
             string pass = textBox2.Text;
-            requete = "select *from Client where nom = 'Ahbella' and prenom = 'Houda' ";
+            requete = "select *from Client where nom = " +log +" and prenom = "+ pass ;
             commande = new SqlCommand(requete, connexion);
             reader = commande.ExecuteReader();
             string s = " Bonjour ";
@@ -60,7 +60,7 @@ namespace App_Banque
                   c.comptes.Add(cp1);
                 }
 
-                // clients.Add(c);
+               
             }
             Select formselect = new Select();
             this.Hide();
@@ -72,3 +72,4 @@ namespace App_Banque
         }
     }
 }
+
