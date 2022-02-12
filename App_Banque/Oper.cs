@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -28,9 +29,18 @@ namespace App_Banque
 
         private void button1_Click(object sender, EventArgs e)
         {
-            com.crediter(int.Parse(textBox1.Text));
+            int ss = int.Parse(textBox1.Text);
+            com.crediter(ss);
             richTextBox1.Text = com.ToString();
             MessageBox.Show("Credit avec succes");
+            SqlCommand commande;
+            SqlDataReader reader;
+            string requete ;
+            requete = "update Compte set solde = " + com.solde + " where numCompte = " + com.numcompte;
+            commande = new SqlCommand(requete, Form1.connexion);
+            reader = commande.ExecuteReader();
+            
+
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -38,8 +48,13 @@ namespace App_Banque
            if( com.debiter(int.Parse(textBox1.Text)))
             {
                 richTextBox1.Text = com.ToString();
+                SqlCommand commande;
+                SqlDataReader reader;
+                string requete;
+                requete = "update Compte set solde = " + com.solde + " where numCompte = " + com.numcompte;
+                commande = new SqlCommand(requete, Form1.connexion);
+                reader = commande.ExecuteReader();
                 MessageBox.Show("debit avec succes");
-                
             }
                
            else MessageBox.Show("echec de debit");
