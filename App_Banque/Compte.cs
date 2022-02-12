@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,6 @@ namespace App_Banque
 {
     public class Compte
     {
-
 		public int numcompte;
 		private Client titulaire;
 		public float solde;
@@ -26,21 +26,48 @@ namespace App_Banque
 			plafond = 1000;
 			this.choix = ch;
 			this.historique = new List<Operation>();
+			string requete = "select * from OperationA where numCompte = " + id;
+			SqlCommand commande = new SqlCommand(requete, Form1.connexion);
+			SqlDataReader reader = commande.ExecuteReader();
+			while (reader.Read())
+			{
+				Operation o = new OperationA(float.Parse(reader["numOperation"].ToString()));
+				this.historique.Add(o);
+			
+			}
+            string requete2 = "select * from OperationR where numCompte = " + id;
+            SqlCommand commande2 = new SqlCommand(requete2, Form1.connexion);
+            SqlDataReader reader2 = commande2.ExecuteReader();
+            while (reader2.Read())
+            {
+                Operation o = new OperationR(float.Parse(reader2["numOperation"].ToString()));
+                this.historique.Add(o);
 
-		}
-		//virtual void consulter();
+            }
+
+        }
+		
 		public void crediter(float somme)
 		{
 			this.solde = this.solde + somme;
-			this.historique.Add(new OperationA(somme));
+			Operation A =new OperationA(somme);
+			this.historique.Add(A);
+			string requete = "insert into OperationA (numOperation,montant,numCompte) values (" + A.num +"," +somme+","+ this.numcompte+")" ;
+			SqlCommand commande = new SqlCommand(requete, Form1.connexion);
+			SqlDataReader reader = commande.ExecuteReader();
 
 		}
+		
 		public bool debiter(float M)
 		{
 			if (plafond > M)
 			{
 				this.solde = this.solde - M;
-				this.historique.Add(new OperationR(M));
+				Operation A = new OperationR(M);
+				this.historique.Add(A);
+				string requete = "insert into OperationR (numOperation,montant,numCompte) values (" + A.num + "," + M + "," + this.numcompte + ")";
+				SqlCommand commande = new SqlCommand(requete, Form1.connexion);
+				SqlDataReader reader = commande.ExecuteReader();
 				return true;
 			}
 			return false;
@@ -71,3 +98,4 @@ namespace App_Banque
 
 	}
 }
+
